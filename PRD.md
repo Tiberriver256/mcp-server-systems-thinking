@@ -12,18 +12,18 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 
 ### In‑scope (MVP)
 
-* One MCP Tool: `systems_thinking_writer` (PUT/POST full JSON each time)
-* Validation & gap detection (hard structural checks)
-* Atomic persistence of latest document (in‑memory → Postgres JSONB)
-* HTTP streaming transport (FastMCP default)
-* Basic observability (request logs, health endpoint)
+- One MCP Tool: `systems_thinking_writer` (PUT/POST full JSON each time)
+- Validation & gap detection (hard structural checks)
+- Atomic persistence of latest document (in‑memory → Postgres JSONB)
+- HTTP streaming transport (FastMCP default)
+- Basic observability (request logs, health endpoint)
 
 ### Out‑of‑scope (Post‑MVP)
 
-* Soft warnings / heuristics (e.g., too many reinforcing loops)
-* Fine‑grained PATCH updates
-* Multi‑document branching or version history navigation
-* Role‑based read/write permission model
+- Soft warnings / heuristics (e.g., too many reinforcing loops)
+- Fine‑grained PATCH updates
+- Multi‑document branching or version history navigation
+- Role‑based read/write permission model
 
 ## 4  Personas & Use Cases
 
@@ -37,10 +37,10 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 
 ### 5.1  Tool Definition
 
-* **Name**: `systems_thinking_writer`
-* **Input**: Full JSON document conforming to Zod schema
-* **Output**: `{ complete: boolean, missing_fields: string[], inconsistency_warnings: string[] }`
-* **Contract**: Reject (HTTP 422) if JSON fails schema; otherwise return validation arrays. `complete === true` only when both arrays are empty.
+- **Name**: `systems_thinking_writer`
+- **Input**: Full JSON document conforming to Zod schema
+- **Output**: `{ complete: boolean, missing_fields: string[], inconsistency_warnings: string[] }`
+- **Contract**: Reject (HTTP 422) if JSON fails schema; otherwise return validation arrays. `complete === true` only when both arrays are empty.
 
 ### 5.2  Endpoint Behaviour
 
@@ -49,13 +49,13 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 | POST   | `/model` | JSON doc | Validation result & copy of stored doc |
 | GET    | `/model` | –        | Latest stored doc                      |
 
-*Server overwrites existing doc on every successful POST.*
+_Server overwrites existing doc on every successful POST._
 
 ### 5.3  Validation Rules (MVP)
 
-* Every `flow.from_stock` & `flow.to_stock` must have matching `stocks.id`
-* Loops may reference only declared elements
-* If a `leverage_point.is_applicable === true` there must be at least one matching `intervention.target_leverage_id`
+- Every `flow.from_stock` & `flow.to_stock` must have matching `stocks.id`
+- Loops may reference only declared elements
+- If a `leverage_point.is_applicable === true` there must be at least one matching `intervention.target_leverage_id`
 
 ## 6  Data Model (abridged)
 
@@ -79,12 +79,12 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 
 ## 7  Architecture & Tech Stack
 
-* **Runtime**: Node 20+ with **TypeScript**
-* **Framework**: **FastMCP** (HTTP streaming transport)
-* **Validation**: **Zod** (schema reused for prompts & runtime)
-* **Persistence**: In‑memory Map → nightly flush to **Postgres** (JSONB)
-* **Container**: Dockerfile with multi‑stage build (tsc compile then dist run)
-* **Observability**: pino logs, `/healthz` endpoint for k8s liveness/readiness
+- **Runtime**: Node 20+ with **TypeScript**
+- **Framework**: **FastMCP** (HTTP streaming transport)
+- **Validation**: **Zod** (schema reused for prompts & runtime)
+- **Persistence**: In‑memory Map → nightly flush to **Postgres** (JSONB)
+- **Container**: Dockerfile with multi‑stage build (tsc compile then dist run)
+- **Observability**: pino logs, `/healthz` endpoint for k8s liveness/readiness
 
 ### Component Diagram (text)
 
@@ -94,19 +94,19 @@ Client Agent → FastMCP Tool → Zod Validator → InMemoryCache → Postgres
                         Gap‑Detection Logic
 ```
 
-## 8  Systems‑Thinking Tutorial (Tool Prompt Seed)
+## 8 Systems‑Thinking Tutorial (Tool Prompt Seed)
 
-Use the following condensed guidance verbatim in the `systems_thinking_writer` **tool description** so the AI knows *when* and *how* to use the tool:
+Use the following condensed guidance verbatim in the `systems_thinking_writer` **tool description** so the AI knows _when_ and _how_ to use the tool:
 
-> **WHEN TO USE**  – Call this tool any time you need a structured, Meadows‑style snapshot of a complex situation that clearly has interacting parts and feedback (e.g. urban traffic, product adoption, climate policy).
+> **WHEN TO USE** – Call this tool any time you need a structured, Meadows‑style snapshot of a complex situation that clearly has interacting parts and feedback (e.g. urban traffic, product adoption, climate policy).
 >
 > **WHAT THE FIELDS MEAN**
 >
-> * **boundary.purpose** – the system’s *why*. Deduced from observed behaviour, not rhetoric. fileciteturn3file4L20-L30
-> * **elements & interconnections** – the nouns and their physical/info links. fileciteturn3file9L38-L41
-> * **stocks & flows** – accumulations and the rates that change them. fileciteturn3file3L9-L22
-> * **loops** – balancing (B) dampen change; reinforcing (R) amplify. fileciteturn3file11L12-L19
-> * **leverage\_points** – Meadows’s 12 intervention levers, from parameters (12) to paradigm shifts (2) and *transcending paradigms* (1). fileciteturn3file2L34-L38
+> - **boundary.purpose** – the system’s _why_. Deduced from observed behaviour, not rhetoric. fileciteturn3file4L20-L30
+> - **elements & interconnections** – the nouns and their physical/info links. fileciteturn3file9L38-L41
+> - **stocks & flows** – accumulations and the rates that change them. fileciteturn3file3L9-L22
+> - **loops** – balancing (B) dampen change; reinforcing (R) amplify. fileciteturn3file11L12-L19
+> - **leverage_points** – Meadows’s 12 intervention levers, from parameters (12) to paradigm shifts (2) and _transcending paradigms_ (1). fileciteturn3file2L34-L38
 >
 > **HOW TO IDENTIFY A SYSTEM**
 > A) parts exist, **and** B) they affect each other, **and** C) they create behaviour distinct from each part alone, **and** D) that behaviour persists over time. fileciteturn3file1L18-L25
@@ -125,15 +125,15 @@ Keep iterating until the server returns `complete: true`.
 
 ---
 
-## 9  Extended Systems‑Thinking Reference (Team Use Only)
+## 9 Extended Systems‑Thinking Reference (Team Use Only)
 
 A quick‑access cheat‑sheet so we don’t have to re‑scan Meadows every sprint.
 
 | Concept                  | One‑liner                                                                                                           | Fast sanity check                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
 | **Elements**             | Tangible or intangible parts of the system                                                                          | Can you point at it? If yes, it’s an element.                             |
-| **Interconnections**     | Physical flows or information signals                                                                               | Does changing A alter B *without* outside influence?                      |
-| **Purpose/Function**     | The consistent pattern the system produces                                                                          | Observe *behaviour*, not mission statements.                              |
+| **Interconnections**     | Physical flows or information signals                                                                               | Does changing A alter B _without_ outside influence?                      |
+| **Purpose/Function**     | The consistent pattern the system produces                                                                          | Observe _behaviour_, not mission statements.                              |
 | **Stock**                | Memory of past flows (bathtub water, money)                                                                         | Units must be additive over time.                                         |
 | **Flow**                 | Rate changing a stock (inflow/outflow)                                                                              | Has units per time.                                                       |
 | **Balancing Loop (B)**   | Goal‑seeking stabiliser                                                                                             | If discrepancy shrinks over time, it’s B.                                 |
@@ -141,27 +141,27 @@ A quick‑access cheat‑sheet so we don’t have to re‑scan Meadows every spr
 | **Delay**                | Gap between cause & effect                                                                                          | Look for oscillations or overshoot.                                       |
 | **Hierarchy**            | Nested subsystems with their own purposes                                                                           | Tight coupling at lower levels, loose at top.                             |
 | **Resilience**           | Ability to absorb shock and keep purpose                                                                            | Diversity, buffers, modular slack increase it.                            |
-| **Leverage ID 12 → 1**   | Parameters → feedback strength → info flows → rules → self‑organisation → purpose → paradigm → *transcend paradigm* | Higher numbers easier to tweak, lower numbers more powerful but cultural. |
+| **Leverage ID 12 → 1**   | Parameters → feedback strength → info flows → rules → self‑organisation → purpose → paradigm → _transcend paradigm_ | Higher numbers easier to tweak, lower numbers more powerful but cultural. |
 
 ### Field‑by‑field Deep‑Dive
 
-* **boundary.scope\_in / scope\_out** – Be explicit; ambiguity breeds model creep.
-* **elements** – Prioritise catalytic actors (ones that appear in many loops).
-* **interconnections.type** – `causal` (solid arrow), `flow` (pipe), `info` (dashed).
-* **stocks** – Check each has at least one in‑flow *or* out‑flow; else it’s inert.
-* **flows.rate\_expr** – Keep human‑readable (`0.1 * demand`). Parser TBD.
-* **loops** – Name loops with verb‑phrase + polarity (`Sales Reinvest R`).
-* **leverage\_points** – If `is_applicable=true` but no intervention, warn.
+- **boundary.scope_in / scope_out** – Be explicit; ambiguity breeds model creep.
+- **elements** – Prioritise catalytic actors (ones that appear in many loops).
+- **interconnections.type** – `causal` (solid arrow), `flow` (pipe), `info` (dashed).
+- **stocks** – Check each has at least one in‑flow _or_ out‑flow; else it’s inert.
+- **flows.rate_expr** – Keep human‑readable (`0.1 * demand`). Parser TBD.
+- **loops** – Name loops with verb‑phrase + polarity (`Sales Reinvest R`).
+- **leverage_points** – If `is_applicable=true` but no intervention, warn.
 
 ### Rapid Diagnostic Questions
 
 1. What stock is unexpectedly changing fastest? Why?
 2. Which loop currently dominates behaviour?
 3. Where is the biggest information delay?
-4. Which leverage point needs the *least* political capital to nudge?
+4. Which leverage point needs the _least_ political capital to nudge?
 
 > “The behavior of a system cannot be known just by knowing the elements.” fileciteturn3file14L1-L4
 
 ---
 
-*Sections 8 (Non‑Functional Requirements) and 9 (Milestones) removed per user request.*
+_Sections 8 (Non‑Functional Requirements) and 9 (Milestones) removed per user request._

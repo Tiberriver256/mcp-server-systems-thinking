@@ -1,0 +1,30 @@
+{
+  "name": "systems-thinking-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc -p .",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "lint": "eslint 'src/**/*.ts'",
+    "format": "prettier --write ."
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "fastmcp": "^3.4.0",
+    "pino": "^8.0.0",
+    "zod": "^3.23.0"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "eslint": "latest",
+    "prettier": "latest",
+    "tsx": "^4.7.0",
+    "typescript": "^5.4.0",
+    "vitest": "^0.34.0"
+  }
+}

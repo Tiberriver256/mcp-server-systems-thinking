@@ -15,7 +15,7 @@
 | **Lint/Format**   | `eslint`, `prettier` | Latest      | Code hygiene                               |
 | **Types**         | `@types/node`        | –           | TS intellisense                            |
 
-*No database, HTTP test harness, or external services required.*
+_No database, HTTP test harness, or external services required._
 
 ---
 
@@ -54,7 +54,7 @@ systems‑thinking‑mcp/
   "start": "node dist/index.js",
   "test": "vitest run",
   "lint": "eslint 'src/**/*.ts'",
-  "format": "prettier --write ."
+  "format": "prettier --write .",
 }
 ```
 
@@ -62,20 +62,21 @@ systems‑thinking‑mcp/
 
 ## 4  State Strategy
 
-* **In‑memory Map** keyed by `system_name`.
-* MCP server instance is stateful for the lifetime of a single conversation.
-* No persistence layer—data is discarded once the server process terminates.
+- **In‑memory Map** keyed by `system_name`.
+- MCP server instance is stateful for the lifetime of a single conversation.
+- No persistence layer—data is discarded once the server process terminates.
 
 ---
 
 ## 5  Testing Philosophy
 
-* **Vitest unit tests** cover:
+- **Vitest unit tests** cover:
 
-  * Zod schema edge‑cases.
-  * Gap‑detection helper (`gap-check.ts`).
-* **Manual integration**: use FastMCP’s interactive dev server to POST large sample docs and observe validation responses.
+  - Zod schema edge‑cases.
+  - Gap‑detection helper (`gap-check.ts`).
+
+- **Manual integration**: use FastMCP’s interactive dev server to POST large sample docs and observe validation responses.
 
 ---
 
-*Everything else—Docker, Helm, Postgres, observability stacks, env vars, security hardening, future upgrades, maintainers—has been intentionally removed per current MVP constraints.*
+_Everything else—Docker, Helm, Postgres, observability stacks, env vars, security hardening, future upgrades, maintainers—has been intentionally removed per current MVP constraints._
