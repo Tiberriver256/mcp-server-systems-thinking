@@ -163,3 +163,5 @@ A quick‑access cheat‑sheet so we don’t have to re‑scan Meadows every spr
 > “The behavior of a system cannot be known just by knowing the elements.” fileciteturn3file14L1-L4
 
 ---
+
+*Sections 8 (Non‑Functional Requirements) and 9 (Milestones) removed per user request.*

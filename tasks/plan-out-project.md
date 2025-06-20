@@ -1,0 +1,1 @@
+We need to inspect [PRD](../PRD.md) and create tasks in the [kanban board](./!KANBAN_BOARD.md)
