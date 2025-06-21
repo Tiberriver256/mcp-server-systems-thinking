@@ -1,6 +1,5 @@
 ## TODO
 
-- [implement-gap-check-validation.md](./implement-gap-check-validation.md)
 - [implement-in-memory-storage.md](./implement-in-memory-storage.md)
 - [implement-fastmcp-server.md](./implement-fastmcp-server.md)
 - [add-unit-tests.md](./add-unit-tests.md)
@@ -16,6 +15,7 @@
 - [plan-out-project.md](./plan-out-project.md)
 - [setup-project-structure.md](./setup-project-structure.md)
 - [implement-zod-schema.md](./implement-zod-schema.md)
+- [implement-gap-check-validation.md](./implement-gap-check-validation.md)
 
 ## Instructions
 
