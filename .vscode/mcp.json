@@ -2,6 +2,10 @@
   "servers": {
     "context7": {
       "url": "https://mcp.context7.com/mcp"
+    },
+    "systems-thinking": {
+      "command": "npx",
+      "args": ["tsx", "${workspaceFolder}/src/index.ts"]
     }
   }
 }
