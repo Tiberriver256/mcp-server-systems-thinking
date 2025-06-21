@@ -1,6 +1,5 @@
 ## TODO
 
-- [implement-in-memory-storage.md](./implement-in-memory-storage.md)
 - [implement-fastmcp-server.md](./implement-fastmcp-server.md)
 - [add-unit-tests.md](./add-unit-tests.md)
 - [setup-build-and-dev-scripts.md](./setup-build-and-dev-scripts.md)
@@ -10,6 +9,7 @@
 
 ## DOING
 
+- [implement-in-memory-storage.md](./implement-in-memory-storage.md)
 ## DONE
 
 - [plan-out-project.md](./plan-out-project.md)
