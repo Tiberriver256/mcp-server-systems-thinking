@@ -106,9 +106,9 @@ export const SystemDocSchema = z.object({
   stocks: z.array(StockSchema),
   flows: z.array(FlowSchema),
   loops: LoopsSchema,
-  leverage_points: z.array(LeveragePointSchema).length(12, 'Must include all 12 leverage points'),
+  leverage_points: z.array(LeveragePointSchema),
   interventions: z.array(InterventionSchema),
-});
+}).deepPartial();
 
 // Inferred TypeScript type
 export type SystemDoc = z.infer<typeof SystemDocSchema>;

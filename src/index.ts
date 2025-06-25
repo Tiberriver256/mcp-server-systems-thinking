@@ -12,31 +12,53 @@ const logger = pino({
   level: 'info',
 });
 
-// Systems-thinking tutorial from PRD section 8
-const SYSTEMS_THINKING_TUTORIAL = `**WHEN TO USE** – Call this tool any time you need a structured, Meadows‑style snapshot of a complex situation that clearly has interacting parts and feedback (e.g. urban traffic, product adoption, climate policy).
+// Systems-thinking guidance from PRD section 8
+const SYSTEMS_THINKING_TUTORIAL = `**WHEN TO USE** – Use this tool when you want to explore a complex situation systematically. Start with what you observe, then build understanding piece by piece through conversation and investigation.
 
-**WHAT THE FIELDS MEAN**
+**SYSTEMS THINKING IS A DISCOVERY PROCESS**
+Don't try to fill out everything at once! This tool is designed to help you:
+- Start with basic observations about a problematic situation
+- Gradually identify system elements through discussion and research
+- Build understanding of relationships and dynamics over time
+- Iterate and refine your mental model as you learn more
 
-- **boundary.purpose** – the system's _why_. Deduced from observed behaviour, not rhetoric.
-- **elements & interconnections** – the nouns and their physical/info links.
-- **stocks & flows** – accumulations and the rates that change them.
-- **loops** – balancing (B) dampen change; reinforcing (R) amplify.
-- **leverage_points** – Meadows's 12 intervention levers, from parameters (12) to paradigm shifts (2) and _transcending paradigms_ (1).
+**GETTING STARTED**
+Begin with just the basics:
+1. What problem or behavior pattern are you trying to understand?
+2. What's the system's apparent purpose (from observing its behavior)?
+3. What are some obvious elements (people, things, processes) involved?
 
-**HOW TO IDENTIFY A SYSTEM**
-A) parts exist, **and** B) they affect each other, **and** C) they create behaviour distinct from each part alone, **and** D) that behaviour persists over time.
+**THE FIELDS EXPLAINED**
 
-**RECOMMENDED FILL‑OUT PATH**
+- **boundary.purpose** – What does this system seem designed to accomplish? (Judge by results, not intentions)
+- **elements** – The key actors, components, resources involved
+- **interconnections** – How elements influence each other (causal links, information flows, material flows)
+- **stocks & flows** – Things that accumulate (stocks) and the rates that change them (flows)
+- **loops** – Circular cause-and-effect chains that either stabilize (balancing) or amplify (reinforcing) change
+- **leverage_points** – Where small changes could create big impacts (see Meadows' 12 points below)
 
-1. **Purpose & boundary** – one sentence each.
-2. **Elements list** – nouns only.
-3. **Interconnections** – causal, flow, or info links.
-4. **Stocks & flows** – declare measurable stores then inflow/outflow pipes.
-5. **Feedback loops** – tag each loop B or R; reference involved stocks.
-6. **Leverage points** – tick applicable IDs (1‑12).
-7. **Interventions** – optional proposals targeting leverage IDs.
+**HOW TO IDENTIFY IF SOMETHING IS A SYSTEM**
+A) Distinct parts exist, **and** B) Parts affect each other, **and** C) They produce behavior different from individual parts, **and** D) This behavior persists over time.
 
-Keep iterating until the server returns \`complete: true\`.`;
+**MEADOWS' 12 LEVERAGE POINTS** (use exact labels):
+1. "The power to transcend paradigms"
+2. "The mindset or paradigm out of which the system arises"  
+3. "The goals of the system"
+4. "The power to add, change, evolve, or self-organize system structure"
+5. "The rules of the system (incentives, punishments, constraints)"
+6. "The structure of information flows (who does and does not have access to information)"
+7. "The gain around driving positive feedback loops"
+8. "The strength of negative feedback loops, relative to the impacts they are trying to correct against"
+9. "The lengths of delays, relative to the rate of system changes"
+10. "The structure of material stocks and flows and nodes of intersection"
+11. "The sizes of buffers and other stabilizing stocks, relative to their flows"
+12. "Constants, parameters, numbers (subsidies, taxes, standards)"
+
+**ITERATIVE APPROACH**
+- Submit partial documents to get feedback and identify gaps
+- Use other tools to research and gather data about your situation
+- Discuss findings and refine your understanding
+- The tool will guide you toward completeness over multiple iterations`;
 
 // Create FastMCP server
 const server = new FastMCP({
@@ -52,7 +74,7 @@ const server = new FastMCP({
 // Add the systems_thinking_writer tool
 server.addTool({
   name: 'systems_thinking_writer',
-  description: `Submit a complete systems-thinking analysis as a JSON document. This tool validates structure, checks for gaps, and stores the document atomically if valid.
+  description: `Collaborate on building a systems-thinking analysis through iterative exploration. Submit partial or complete documents to get guidance, identify gaps, and refine your understanding. The tool will help you discover system dynamics step-by-step rather than requiring everything upfront.
 
 ${SYSTEMS_THINKING_TUTORIAL}`,
 
@@ -64,8 +86,14 @@ ${SYSTEMS_THINKING_TUTORIAL}`,
     logger.info('Processing systems thinking document');
 
     try {
+      // Retrieve the existing document, or start with an empty object
+      const existingDoc = storage.retrieve((document as any)?.system_name) || {};
+
+      // Merge the new document with the existing one
+      const mergedDoc = { ...existingDoc, ...document };
+
       // First validate against Zod schema
-      const schemaValidation = validateSystemDoc(document);
+      const schemaValidation = validateSystemDoc(mergedDoc);
 
       if (!schemaValidation.success) {
         logger.warn('Schema validation failed', { errors: schemaValidation.error.errors });
@@ -90,8 +118,10 @@ ${SYSTEMS_THINKING_TUTORIAL}`,
       });
 
       // Store document atomically if validation passes
-      storage.store(systemDoc.system_name, systemDoc);
-      logger.info('Document stored successfully', { systemName: systemDoc.system_name });
+      if (systemDoc.system_name) {
+        storage.store(systemDoc.system_name, systemDoc);
+        logger.info('Document stored successfully', { systemName: systemDoc.system_name });
+      }
 
       return {
         content: [

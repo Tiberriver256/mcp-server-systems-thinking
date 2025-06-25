@@ -2,7 +2,7 @@
 
 ## 1  Objective
 
-Deliver a **Systems‑Thinking MCP server** that lets an AI agent submit a full systems‑thinking representation (single JSON document) over HTTP. The server validates structure, persists the latest version atomically, and returns validation gaps so the agent can iterate until the document is complete.
+Deliver a **Systems‑Thinking MCP server** that lets an AI agent submit a partial or complete systems‑thinking representation over HTTP. The server validates the structure of the submitted portion, merges it with any existing data, and returns feedback (validation gaps, inconsistencies) to guide the agent toward a complete and coherent model.
 
 ## 2  Background & Motivation
 
@@ -12,9 +12,9 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 
 ### In‑scope (MVP)
 
-- One MCP Tool: `systems_thinking_writer` (PUT/POST full JSON each time)
-- Validation & gap detection (hard structural checks)
-- Atomic persistence of latest document (in‑memory → Postgres JSONB)
+- One MCP Tool: `systems_thinking_writer` (PUT/POST partial or full JSON)
+- Validation & gap detection on submitted fields (not the whole document)
+- Atomic merge of valid fields into the persisted document (in‑memory → Postgres JSONB)
 - HTTP streaming transport (FastMCP default)
 - Basic observability (request logs, health endpoint)
 
@@ -38,24 +38,24 @@ Sequential‑thinking servers proved that forcing LLMs through a rigid I/O contr
 ### 5.1  Tool Definition
 
 - **Name**: `systems_thinking_writer`
-- **Input**: Full JSON document conforming to Zod schema
-- **Output**: `{ complete: boolean, missing_fields: string[], inconsistency_warnings: string[] }`
-- **Contract**: Reject (HTTP 422) if JSON fails schema; otherwise return validation arrays. `complete === true` only when both arrays are empty.
+- **Input**: Partial or full JSON document conforming to a loosened Zod schema
+- **Output**: `{ success: boolean, merged_document: object, errors: string[] }`
+- **Contract**: Reject (HTTP 422) only if the submitted partial JSON has internal inconsistencies. Otherwise, merge the valid fields and return the full document with any outstanding validation errors.
 
 ### 5.2  Endpoint Behaviour
 
 | Method | Path     | Body     | Response                               |
 | ------ | -------- | -------- | -------------------------------------- |
-| POST   | `/model` | JSON doc | Validation result & copy of stored doc |
+| POST   | `/model` | Partial or full JSON doc | Validation result & copy of the merged doc |
 | GET    | `/model` | –        | Latest stored doc                      |
 
-_Server overwrites existing doc on every successful POST._
+_Server merges the request body into the existing doc on every successful POST._
 
 ### 5.3  Validation Rules (MVP)
 
-- Every `flow.from_stock` & `flow.to_stock` must have matching `stocks.id`
-- Loops may reference only declared elements
-- If a `leverage_point.is_applicable === true` there must be at least one matching `intervention.target_leverage_id`
+- The server should validate the structure of the incoming partial document.
+- If the partial document is valid, it should be merged with the existing document.
+- The server should return a list of any validation errors in the merged document.
 
 ## 6  Data Model (abridged)
 

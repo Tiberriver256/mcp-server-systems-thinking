@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "context7": {
+      "httpUrl": "https://mcp.context7.com/mcp"
+    },
+    "systems-thinking": {
+      "command": "npx",
+      "args": ["tsx", "src/index.ts"]
+    }
+  }
+}
